@@ -1,0 +1,3 @@
+[submodule "rust"]
+	path = rust
+	url = https://github.com/mposk98/wasm-game-of-life-rust

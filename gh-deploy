@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+echo building...
+npm run build
+
+echo deploying to gh-pages branch...
+git add -A
+git commit -m 'deploy to github pages'
+git subtree push --prefix dist origin gh-pages
