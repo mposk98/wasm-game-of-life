@@ -9,8 +9,9 @@ echo deploying to gh-pages branch...
 cd dist
 git init
 git add -A
-git co -b gh-pages
+git checkout --orphan tmp_branch
 git commit -m 'deploy to github pages'
-git push https://github.com/mposk98/wasm-game-of-life.git gh-pages
-git co master
+git branch -D gh-pages
+git branch -m gh-pages
+git push --force https://github.com/mposk98/wasm-game-of-life.git gh-pages
 cd ..
