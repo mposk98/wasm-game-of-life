@@ -2,6 +2,8 @@
 
 set -e
 
+rm -rf dist
+
 echo building...
 npm run build
 
@@ -9,9 +11,7 @@ echo deploying to gh-pages branch...
 cd dist
 git init
 git add -A
-git checkout --orphan tmp_branch
+git checkout -b gh-pages
 git commit -m 'deploy to github pages'
-git branch -D gh-pages
-git branch -m gh-pages
 git push --force https://github.com/mposk98/wasm-game-of-life.git gh-pages
 cd ..
