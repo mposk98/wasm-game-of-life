@@ -1,18 +1,20 @@
-import { Universe, Cell, UniverseMode } from "wasm-game-of-life-rust";
-import { memory } from "wasm-game-of-life-rust/wasm_game_of_life_bg";
+import { Universe, Cell, UniverseMode } from 'wasm-game-of-life-rust';
+import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg';
 
-const CELL_SIZE = 8; // px
-const GRID_COLOR = "#CCCCCC";
-const DEAD_COLOR = "#FFFFFF";
-const ALIVE_COLOR = "#000000";
+const CELL_SIZE = 7; // px
+const GRID_COLOR = '#121212';
+const DEAD_COLOR = '#202020';
+const ALIVE_COLOR = '#DDDDDD';
+const UNIVERSE_HEIGHT = 64;
+const UNIVERSE_WIDTH = 64;
 
-const universe = Universe.new(64, 64, UniverseMode.FixedSizeNonPeriodic);
-const width = universe.width();
+const universe = Universe.new(UNIVERSE_HEIGHT, UNIVERSE_WIDTH, UniverseMode.FixedSizeNonPeriodic);
 const height = universe.height();
+const width = universe.width();
 
 // Give the canvas room for all of our cells and a 1px border
 // around each of them.
-const canvas = document.getElementById("game-of-life-canvas");
+const canvas = document.getElementById('game-of-life-canvas');
 canvas.height = (CELL_SIZE + 1) * height + 1;
 canvas.width = (CELL_SIZE + 1) * width + 1;
 
@@ -31,7 +33,7 @@ const drawGrid = () => {
     // Horizontal lines.
     for (let j = 0; j <= height; j++) {
         ctx.moveTo(0,                           j * (CELL_SIZE + 1) + 1);
-         ctx.lineTo((CELL_SIZE + 1) * width + 1, j * (CELL_SIZE + 1) + 1);
+        ctx.lineTo((CELL_SIZE + 1) * width + 1, j * (CELL_SIZE + 1) + 1);
     }
   
     ctx.stroke();
@@ -67,9 +69,23 @@ const drawCells = () => {
     ctx.stroke();
 };
 
-setInterval(() => {
-    universe.tick();
-}, 70);
+canvas.addEventListener('click', (event) => {
+    const { x: canvasX, y: canvasY } = canvas.getBoundingClientRect();
+    const relX = event.clientX - canvasX;
+    const relY = event.clientY - canvasY;
+    const row = ( relY / (canvas.offsetHeight / UNIVERSE_HEIGHT) ) >> 0;
+    const col = ( relX / (canvas.offsetWidth  / UNIVERSE_WIDTH ) ) >> 0;
+    if (row < 0 || row > UNIVERSE_WIDTH -1 || col < 0 || col > UNIVERSE_HEIGHT - 1) {
+        return;
+    }
+    universe.toggle_cell(row, col);
+});
+
+document.addEventListener('keydown', (event) => {
+    if(event.keyCode === 32) {
+        universe.tick();
+    }
+});
 
 const renderLoop = () => {
 
@@ -82,3 +98,4 @@ const renderLoop = () => {
 drawGrid();
 drawCells();
 requestAnimationFrame(renderLoop);
+

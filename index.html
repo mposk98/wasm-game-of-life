@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>wasm-game-of-life</title>
+    <title>The game of life</title>
     <style>
       body {
         position: absolute;
@@ -10,14 +10,21 @@
         left: 0;
         width: 100%;
         height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        background-color: #121212;
+        color: #DDDDDD;
       }
     </style>
   </head>
   <body>
+    <p>
+      <strong>The game of life.</strong> Click to toggle cell (dead/alive), press <b>space</b> to run life.
+    </p>
     <canvas id="game-of-life-canvas"></canvas>
     <script src="./bootstrap.js"></script>
   </body>
