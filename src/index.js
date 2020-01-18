@@ -1,10 +1,7 @@
 import { Universe, Cell, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
 import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line import/no-unresolved
+import scene from './scene';
 
-const CELL_SIZE = 7; // px
-const GRID_COLOR = '#121212';
-const DEAD_COLOR = '#202020';
-const ALIVE_COLOR = '#DDDDDD';
 const UNIVERSE_HEIGHT = 64;
 const UNIVERSE_WIDTH = 64;
 
@@ -13,78 +10,12 @@ const universe = Universe.new(
     UNIVERSE_WIDTH,
     UniverseMode.FixedSizeNonPeriodic,
 );
-const height = universe.height();
-const width = universe.width();
+const rows = universe.height();
+const columns = universe.width();
+const cellSize = 12;
 
-// Give the canvas room for all of our cells and a 1px border
-// around each of them.
-const canvas = document.getElementById('game-of-life-canvas');
-canvas.height = (CELL_SIZE + 1) * height + 1;
-canvas.width = (CELL_SIZE + 1) * width + 1;
-
-const ctx = canvas.getContext('2d');
-
-const drawGrid = () => {
-    ctx.beginPath();
-    ctx.strokeStyle = GRID_COLOR;
-
-    // Vertical lines.
-    for (let i = 0; i <= width; i += 1) {
-        ctx.moveTo(i * (CELL_SIZE + 1) + 1, 0);
-        ctx.lineTo(i * (CELL_SIZE + 1) + 1, (CELL_SIZE + 1) * height + 1);
-    }
-
-    // Horizontal lines.
-    for (let j = 0; j <= height; j += 1) {
-        ctx.moveTo(0, j * (CELL_SIZE + 1) + 1);
-        ctx.lineTo((CELL_SIZE + 1) * width + 1, j * (CELL_SIZE + 1) + 1);
-    }
-
-    ctx.stroke();
-};
-
-const getIndex = (row, column) => row * width + column;
-
-const drawCells = () => {
-    const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
-
-    ctx.beginPath();
-
-    for (let row = 0; row < height; row += 1) {
-        for (let col = 0; col < width; col += 1) {
-            const idx = getIndex(row, col);
-
-            ctx.fillStyle = cells[idx] === Cell.Dead ? DEAD_COLOR : ALIVE_COLOR;
-
-            ctx.fillRect(
-                col * (CELL_SIZE + 1) + 1,
-                row * (CELL_SIZE + 1) + 1,
-                CELL_SIZE,
-                CELL_SIZE,
-            );
-        }
-    }
-
-    ctx.stroke();
-};
-
-canvas.addEventListener('click', (event) => {
-    const { x: canvasX, y: canvasY } = canvas.getBoundingClientRect();
-    const relX = event.clientX - canvasX;
-    const relY = event.clientY - canvasY;
-    const row = (relY / (canvas.offsetHeight / UNIVERSE_HEIGHT)) | 0;
-    const col = (relX / (canvas.offsetWidth / UNIVERSE_WIDTH)) | 0;
-    if (
-        row < 0
-        || row > UNIVERSE_WIDTH - 1
-        || col < 0
-        || col > UNIVERSE_HEIGHT - 1
-    ) {
-        return;
-    }
-    universe.toggle_cell(row, col);
-});
+scene.init(rows, columns, cellSize);
+scene.addClickListener((row, col) => universe.toggle_cell(row, col));
 
 document.addEventListener('keydown', (event) => {
     if (event.keyCode === 32) {
@@ -93,12 +24,10 @@ document.addEventListener('keydown', (event) => {
 });
 
 const renderLoop = () => {
-    drawGrid();
-    drawCells();
-
+    const cellsPtr = universe.cells();
+    const cells = new Uint8Array(memory.buffer, cellsPtr, rows * columns);
+    scene.draw(cells, Cell.Dead);
     requestAnimationFrame(renderLoop);
 };
 
-drawGrid();
-drawCells();
 requestAnimationFrame(renderLoop);
