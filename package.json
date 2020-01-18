@@ -1,7 +1,7 @@
 {
   "name": "wasm-game-of-life",
   "version": "0.1.0",
-  "description": "interface for game of life",
+  "description": "interface for the game of life",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
