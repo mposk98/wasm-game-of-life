@@ -8,6 +8,7 @@ export default {
     GRID_COLOR: '#121212',
     ALIVE_COLOR: '#DDDDDD',
     DEAD_COLOR: '#353535',
+    htmlContainerId: '',
 
     setHtmlSize(height, width) {
         this.htmlElem.height = height;
@@ -75,22 +76,39 @@ export default {
         return { row, col };
     },
 
+    setCellSize() {
+        this.cellSize = this.getCellSize();
+        // 1px border around each of cells
+        this.setHtmlSize(
+            (this.cellSize + 1) * this.rows + 1,
+            (this.cellSize + 1) * this.columns + 1,
+        );
+    },
+
+    getCellSize() {
+        this.htmlElem.height = 0;
+        this.htmlElem.width = 0;
+        const sceneContainer = document.getElementById(this.htmlContainerId);
+        const size = this.rows;
+        if (sceneContainer.clientWidth > sceneContainer.clientHeight) {
+            return ((sceneContainer.clientHeight + 1) / size) - 1 | 0;
+        }
+        return ((sceneContainer.clientWidth + 1) / size) - 1 | 0;
+    },
+
     // public
 
-    init(rows, columns, cellSize) {
-        this.cellSize = cellSize;
+    init(rows, columns, htmlContainerId) {
         this.rows = rows;
         this.columns = columns;
-        // 1px border around each of cells
-        this.setHtmlSize((cellSize + 1) * rows + 1, (cellSize + 1) * columns + 1);
+        this.htmlContainerId = htmlContainerId;
+        this.setCellSize();
+        window.addEventListener('resize', () => {
+            this.setCellSize();
+        });
         this.htmlElem.oncontextmenu = (event) => {
             event.preventDefault();
         };
-    },
-
-    changeCellSize(cellSize) {
-        this.cellSize = cellSize;
-        this.setHtmlSize((cellSize + 1) * this.rows + 1, (cellSize + 1) * this.columns + 1);
     },
 
     draw(cells, deadCellValue) {
