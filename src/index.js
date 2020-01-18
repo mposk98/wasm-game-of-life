@@ -16,6 +16,10 @@ const cellSize = 12;
 
 scene.init(rows, columns, cellSize);
 scene.addClickListener((row, col) => universe.toggle_cell(row, col));
+const LEFT_BUTTON = 1;
+const RIGHT_BUTTON = 3;
+scene.addMousePressedListener(LEFT_BUTTON, (row, col) => universe.set_alive(row, col));
+scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => universe.set_dead(row, col));
 
 document.addEventListener('keydown', (event) => {
     if (event.keyCode === 32) {

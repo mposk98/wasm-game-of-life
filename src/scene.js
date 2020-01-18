@@ -58,6 +58,23 @@ export default {
         ctx.stroke();
     },
 
+    getEventCoords(event) {
+        const { x: sceneX, y: sceneY } = this.htmlElem.getBoundingClientRect();
+        const relX = event.clientX - sceneX;
+        const relY = event.clientY - sceneY;
+        const row = (relY / (this.htmlElem.clientHeight / this.rows)) | 0;
+        const col = (relX / (this.htmlElem.clientWidth / this.columns)) | 0;
+        if (
+            row < 0
+            || row > this.columns - 1
+            || col < 0
+            || col > this.rows - 1
+        ) {
+            return null;
+        }
+        return { row, col };
+    },
+
     // public
 
     init(rows, columns, cellSize) {
@@ -66,6 +83,9 @@ export default {
         this.columns = columns;
         // 1px border around each of cells
         this.setHtmlSize((cellSize + 1) * rows + 1, (cellSize + 1) * columns + 1);
+        this.htmlElem.oncontextmenu = (event) => {
+            event.preventDefault();
+        };
     },
 
     changeCellSize(cellSize) {
@@ -80,21 +100,47 @@ export default {
     },
 
     addClickListener(listener) {
-        this.htmlElem.addEventListener('click', (event) => {
-            const { x: sceneX, y: sceneY } = this.htmlElem.getBoundingClientRect();
-            const relX = event.clientX - sceneX;
-            const relY = event.clientY - sceneY;
-            const row = (relY / (this.htmlElem.clientHeight / this.rows)) | 0;
-            const col = (relX / (this.htmlElem.clientWidth / this.columns)) | 0;
-            if (
-                row < 0
-                || row > this.columns - 1
-                || col < 0
-                || col > this.rows - 1
-            ) {
-                return;
+        let row;
+        let col;
+        this.htmlElem.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            if (event.which !== 1) return;
+            const downCoords = this.getEventCoords(event);
+            row = downCoords.row;
+            col = downCoords.col;
+        });
+        this.htmlElem.addEventListener('mouseup', (event) => {
+            event.preventDefault();
+            if (event.which !== 1) return;
+            const upCoords = this.getEventCoords(event);
+            if (upCoords.row === row && upCoords.col === col) {
+                listener(row, col);
             }
-            listener(row, col);
+        });
+    },
+
+    addMousePressedListener(btnNum, listener) {
+        let isPressed = false;
+        this.htmlElem.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            if (event.which === btnNum) {
+                isPressed = true;
+            }
+        });
+
+        document.addEventListener('mouseup', (event) => {
+            event.preventDefault();
+            if (event.which === btnNum) {
+                isPressed = false;
+            }
+        });
+
+        this.htmlElem.addEventListener('mousemove', (event) => {
+            event.preventDefault();
+            if (isPressed === true && event.which === btnNum) {
+                const { row, col } = this.getEventCoords(event);
+                listener(row, col);
+            }
         });
     },
 };
