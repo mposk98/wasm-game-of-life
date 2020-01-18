@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server",
-    "fmt": "prettier --write --tab-width 4 --single-quote --trailing-comma es5 'src/**/*.js'"
+    "fmt": "eslint --fix --ext .js src"
   },
   "repository": {
     "type": "git",
@@ -16,10 +16,15 @@
   "license": "(MIT OR Apache-2.0)",
   "homepage": "https://mposk98.github.io/wasm-game-of-life",
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
     "copy-webpack-plugin": "^5.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
     "wasm-game-of-life-rust": "file:./rust/pkg",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
-  }
+  },
+  "dependencies": {}
 }
