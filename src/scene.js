@@ -111,6 +111,12 @@ export default {
         };
     },
 
+    reinit(rows, columns) {
+        this.rows = rows;
+        this.columns = columns;
+        this.setCellSize();
+    },
+
     draw(cells, deadCellValue) {
         const ctx = this.htmlElem.getContext('2d');
         this.drawGrid(ctx);
