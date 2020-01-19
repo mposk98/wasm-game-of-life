@@ -153,7 +153,6 @@ export default {
         });
 
         document.addEventListener('mouseup', (event) => {
-            event.preventDefault();
             if (event.which === btnNum) {
                 isPressed = false;
             }

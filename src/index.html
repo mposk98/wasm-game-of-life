@@ -33,53 +33,36 @@
         justify-content: flex-start;
       }
 
-      select.universe-mode {
-        background-color: #353535;
-        color: #DDDDDD;
-        border: none;
-        outline: none;
-        border-radius: 3px;
-        width: 140px;
-        height: 25px;
-        margin-bottom: 10px;
+      .universe-options-text {
+        width: 50px;
       }
 
-      select.universe-mode:hover {
-        background-color: #383838;
+      .universe-options-option {
+        width: 100px;
+        background-color: #353535;
+        border: none;
+        height: 25px;
+        border-radius: 3px;
+        color: #DDDDDD;
+        padding: 0;
       }
 
-      form.universe-size {
-        background-color: #353535;
-        color: #DDDDDD;
-        border: none;
-        outline: none;
-        border-radius: 3px;
-        width: 140px;
-        height: 25px;
+      .universe-size-input {
+        padding-left: 4px;
+        width: 96px;
+      }
+
+      .universe-mode-container {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
+        margin-bottom: 10px;
       }
 
-      form.universe-size:hover {
-        background-color: #383838;
-      }
-
-      form.universe-size input {
-        width: 60px;
-        height: 25px;
-        background-color: inherit;
-        border: none;
-        border-radius: inherit;
-        text-align: center;
-        padding: 0;
-        color: inherit;
-      }
-
-      form.universe-size div {
-        width: 80px;
-        text-align: center;
+      .universe-size-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
 
       /* @media (min-width: 1200px) { */
@@ -107,14 +90,18 @@
     </div>
     <div class="main" id="main">
       <div class="menu">
-        <select class="universe-mode" id="universe-mode">
-          <option value="1">mode: non periodic</option>
-          <option value="2">mode: periodic</option>
-        </select>
-        <form class="universe-size" id="universe-size">
-          <div>size:</div>
-          <input type="number" class="universe-size" value="10" name="size">
-          </input>
+        <form class="universe-options" id="universe-options">
+          <div class="universe-mode-container">
+            <div class="universe-options-text">mode:</div>
+            <select class="universe-options-option" name="universe-mode">
+              <option value="1">non periodic</option>
+              <option value="2">periodic</option>
+            </select>
+          </div>
+          <div class="universe-size-container">
+            <div class="universe-options-text">size:</div>
+            <input type="number" class="universe-options-option universe-size-input" value="10" min="1" max="1000" name="universe-size"/>
+          </div>
         </form>
       </div>
       <div class="scene-container" id="scene-container">

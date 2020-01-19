@@ -4,7 +4,7 @@ import scene from './scene';
 
 const ROWS = 20;
 const COLUMNS = 20;
-let universe = Universe.new(
+const universe = Universe.new(
     ROWS,
     COLUMNS,
     UniverseMode.FixedSizeNonPeriodic,
@@ -24,12 +24,12 @@ scene.addClickListener((row, col) => universe.toggle_cell(row, col));
 scene.addMousePressedListener(LEFT_BUTTON, (row, col) => universe.set_alive(row, col));
 scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => universe.set_dead(row, col));
 
-document.getElementById('universe-size').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const size = event.target.elements.size.value;
-    universe = Universe.new(size, size, UniverseMode.FixedSizeNonPeriodic);
-    scene.reinit(size, size);
-});
+// document.getElementById('universe-size').addEventListener('submit', (event) => {
+//     event.preventDefault();
+//     const size = event.target.elements.size.value;
+//     universe = Universe.new(size, size, UniverseMode.FixedSizeNonPeriodic);
+//     scene.reinit(size, size);
+// });
 
 const renderLoop = () => {
     const cellsPtr = universe.cells();
