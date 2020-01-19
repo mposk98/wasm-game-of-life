@@ -2,40 +2,69 @@ import { Universe, Cell, UniverseMode } from 'wasm-game-of-life-rust'; // eslint
 import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line import/no-unresolved
 import scene from './scene';
 
-const ROWS = 20;
-const COLUMNS = 20;
+let universeRows = 10;
+let universeColumns = 10;
 const universe = Universe.new(
-    ROWS,
-    COLUMNS,
-    UniverseMode.FixedSizeNonPeriodic,
+    universeRows,
+    universeColumns,
+    UniverseMode.FixedSizePeriodic,
 );
+
+scene.init(universeRows, universeColumns, 'scene-container');
+
+const renderScene = () => {
+    // console.log(universe.render_string());
+    const cellsPtr = universe.cells();
+    const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
+    scene.draw(cells, Cell.Dead);
+};
+
+const LEFT_BUTTON = 1;
+const RIGHT_BUTTON = 3;
+
+window.addEventListener('resize', () => {
+    scene.setCellSize();
+    requestAnimationFrame(renderScene);
+});
+
 document.addEventListener('keydown', (event) => {
     if (event.keyCode === 32) {
         event.preventDefault();
         universe.tick();
+        requestAnimationFrame(renderScene);
     }
 });
 
-scene.init(ROWS, COLUMNS, 'scene-container');
+scene.addClickListener((row, col) => {
+    universe.toggle_cell(row, col);
+    requestAnimationFrame(renderScene);
+});
 
-const LEFT_BUTTON = 1;
-const RIGHT_BUTTON = 3;
-scene.addClickListener((row, col) => universe.toggle_cell(row, col));
-scene.addMousePressedListener(LEFT_BUTTON, (row, col) => universe.set_alive(row, col));
-scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => universe.set_dead(row, col));
+scene.addMousePressedListener(LEFT_BUTTON, (row, col) => {
+    universe.set_alive(row, col);
+    requestAnimationFrame(renderScene);
+});
 
-// document.getElementById('universe-size').addEventListener('submit', (event) => {
-//     event.preventDefault();
-//     const size = event.target.elements.size.value;
-//     universe = Universe.new(size, size, UniverseMode.FixedSizeNonPeriodic);
-//     scene.reinit(size, size);
-// });
+scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
+    universe.set_dead(row, col);
+    requestAnimationFrame(renderScene);
+});
 
-const renderLoop = () => {
-    const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, ROWS * COLUMNS);
-    scene.draw(cells, Cell.Dead);
-    requestAnimationFrame(renderLoop);
-};
+document.getElementById('universe-options').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const size = event.target.elements['universe-size'].value;
+    const mode = event.target.elements['universe-mode'].value;
+    if (mode === 'periodic') {
+        universe.set_mode(UniverseMode.FixedSizePeriodic);
+    }
+    if (mode === 'non-periodic') {
+        universe.set_mode(UniverseMode.FixedSizeNonPeriodic);
+    }
+    universeRows = size;
+    universeColumns = size;
+    universe.reinit_cells(size, size);
+    scene.reinit(size, size);
+    requestAnimationFrame(renderScene);
+});
 
-requestAnimationFrame(renderLoop);
+requestAnimationFrame(renderScene);

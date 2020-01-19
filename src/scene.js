@@ -76,15 +76,6 @@ export default {
         return { row, col };
     },
 
-    setCellSize() {
-        this.cellSize = this.getCellSize();
-        // 1px border around each of cells
-        this.setHtmlSize(
-            (this.cellSize + 1) * this.rows + 1,
-            (this.cellSize + 1) * this.columns + 1,
-        );
-    },
-
     getCellSize() {
         this.htmlElem.height = 0;
         this.htmlElem.width = 0;
@@ -103,9 +94,6 @@ export default {
         this.columns = columns;
         this.htmlContainerId = htmlContainerId;
         this.setCellSize();
-        window.addEventListener('resize', () => {
-            this.setCellSize();
-        });
         this.htmlElem.oncontextmenu = (event) => {
             event.preventDefault();
         };
@@ -115,6 +103,15 @@ export default {
         this.rows = rows;
         this.columns = columns;
         this.setCellSize();
+    },
+
+    setCellSize() {
+        this.cellSize = this.getCellSize();
+        // 1px border around each of cells
+        this.setHtmlSize(
+            (this.cellSize + 1) * this.rows + 1,
+            (this.cellSize + 1) * this.columns + 1,
+        );
     },
 
     draw(cells, deadCellValue) {
