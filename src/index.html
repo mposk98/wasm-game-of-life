@@ -22,16 +22,70 @@
         text-align: center;
         font-size: 18px;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
+      }
+
+      .menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      select.universe-mode {
+        background-color: #353535;
+        color: #DDDDDD;
+        border: none;
+        outline: none;
+        border-radius: 3px;
+        width: 140px;
+        height: 25px;
+        margin-bottom: 10px;
+      }
+
+      select.universe-mode:hover {
+        background-color: #383838;
+      }
+
+      form.universe-size {
+        background-color: #353535;
+        color: #DDDDDD;
+        border: none;
+        outline: none;
+        border-radius: 3px;
+        width: 140px;
+        height: 25px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      form.universe-size:hover {
+        background-color: #383838;
+      }
+
+      form.universe-size input {
+        width: 60px;
+        height: 25px;
+        background-color: inherit;
+        border: none;
+        border-radius: inherit;
+        text-align: center;
+        padding: 0;
+        color: inherit;
+      }
+
+      form.universe-size div {
+        width: 80px;
+        text-align: center;
       }
 
       /* @media (min-width: 1200px) { */
         .main {
           display: grid;
-          grid-template-columns: 1fr 4fr 1fr;
-          grid-column-gap: 10px;
+          grid-template-columns: 20vw 60vw 20vw;
         }
 
         .scene-container {
@@ -48,12 +102,20 @@
   <body>
     <div class="header">
       <div>
-        <strong>The game of life.</strong> Click to toggle cell (alive/dead), press <b>left button</b>/<b>right button</b> and move mouse to set cells alive/dead, press <b>space</b> to run life.
+        <strong>The game of life.</strong> Click to toggle cell (alive/dead), press <b>left button</b>/<b>right button</b> and move mouse to set cells alive/dead, press <b>space</b> to run the life.
       </div>
     </div>
     <div class="main" id="main">
       <div class="menu">
-        
+        <select class="universe-mode" id="universe-mode">
+          <option value="1">mode: non periodic</option>
+          <option value="2">mode: periodic</option>
+        </select>
+        <form class="universe-size" id="universe-size">
+          <div>size:</div>
+          <input type="number" class="universe-size" value="10" name="size">
+          </input>
+        </form>
       </div>
       <div class="scene-container" id="scene-container">
         <canvas id="game-of-life-canvas"></canvas>
