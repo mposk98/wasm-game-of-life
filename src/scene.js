@@ -5,9 +5,9 @@ export default {
     cellSize: 0,
     rows: 0,
     columns: 0,
-    GRID_COLOR: '#121212',
-    ALIVE_COLOR: '#DDDDDD',
-    DEAD_COLOR: '#353535',
+    GRID_COLOR: 'rgb(8, 8, 15)',
+    ALIVE_COLOR: 'rgb(200, 200, 220)',
+    DEAD_COLOR: 'rgb(40, 40, 50)',
     htmlContainerId: '',
 
     setHtmlSize(height, width) {

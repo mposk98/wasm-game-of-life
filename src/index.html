@@ -12,7 +12,7 @@
         height: 100%;
         margin: 0 !important;
         padding: 0 !important;
-        background-color: #121212;
+        background-color: rgb(8, 8, 15);
         color: #DDDDDD;
         display: grid;
         grid-template-rows: 1fr 14fr 10px;
@@ -20,13 +20,13 @@
 
       button {
         color: #DDDDDD;
-        background-color: #353535;
+        background-color: rgb(40, 40, 50);
         border-radius: 3px;
         border: none;
       }
 
       button:hover {
-        background-color: #383838;
+        background-color: rgb(43, 43, 54);
       }
 
       .header {
@@ -51,15 +51,13 @@
       .universe-options-option {
         width: 66%;
         height: 100%;
-        background-color: #353535;
         border: none;
         border-radius: 3px;
-        color: #DDDDDD;
         padding: 0;
       }
 
       .universe-options-option:hover {
-        background-color: #383838;
+        opacity: 0.9;
       }
 
       .universe-size-input {
@@ -72,8 +70,8 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        width: 150px;
-        height: 25px;
+        width: 180px;
+        height: 30px;
       }
 
       .universe-options-field-container:not(:last-child) {
@@ -120,7 +118,7 @@
           </div>
           <div class="universe-options-field-container">
             <div class="universe-options-text">size:</div>
-            <input type="number" class="universe-options-option universe-size-input" value="10" min="1" max="400" name="universe-size"/>
+            <input type="number" class="universe-options-option universe-size-input" value="30" min="1" max="400" name="universe-size"/>
           </div>
           <div class="universe-options-field-container">
             <button type="submit" class="universe-options-submit">submit</button>

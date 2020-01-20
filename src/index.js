@@ -2,8 +2,8 @@ import { Universe, Cell, UniverseMode } from 'wasm-game-of-life-rust'; // eslint
 import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line import/no-unresolved
 import scene from './scene';
 
-let universeRows = 10;
-let universeColumns = 10;
+let universeRows = 30;
+let universeColumns = 30;
 const universe = Universe.new(
     universeRows,
     universeColumns,
