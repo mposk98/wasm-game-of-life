@@ -27,6 +27,13 @@ window.addEventListener('resize', () => {
     requestAnimationFrame(renderScene);
 });
 
+// prevent submit caused by space keyup
+document.addEventListener('keyup', (event) => {
+    if (event.keyCode === 32) {
+        event.preventDefault();
+    }
+});
+
 document.addEventListener('keydown', (event) => {
     if (event.keyCode === 32) {
         event.preventDefault();
