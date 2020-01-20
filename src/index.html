@@ -20,13 +20,13 @@
 
       button {
         color: #DDDDDD;
-        background-color: rgb(40, 40, 50);
+        background-color: rgb(40, 40, 52);
         border-radius: 3px;
         border: none;
       }
 
       button:hover {
-        background-color: rgb(43, 43, 54);
+        background-color: rgb(43, 43, 66);
       }
 
       .header {
@@ -83,6 +83,39 @@
         height: 100%;
       }
 
+      .right-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .margin-bottom-10 {
+        margin-bottom: 10px;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        cursor: default;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: rgb(16, 16, 30);;
+        min-width: 300px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding-left: 16px;
+        padding-right: 16px;
+        z-index: 1;
+        right: 100%;
+        text-align: justify;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
       /* @media (min-width: 1200px) { */
         .main {
           display: grid;
@@ -102,9 +135,7 @@
   </head>
   <body>
     <div class="header">
-      <div>
-        <strong>The game of life.</strong> Click to toggle cell (alive/dead), press <b>left button</b>/<b>right button</b> and move mouse to set cells alive/dead, press <b>space</b> to run the life.
-      </div>
+      <strong>The game of life</strong>
     </div>
     <div class="main" id="main">
       <div class="menu">
@@ -128,8 +159,24 @@
       <div class="scene-container" id="scene-container">
         <canvas id="game-of-life-canvas"></canvas>
       </div>
-      <div class="rules">
-
+      <div class="right-container">
+        <div class="dropdown margin-bottom-10">
+          <span>Game control &#9660;</span>
+          <div class="dropdown-content">
+            <p>1. Click to toggle cell (alive/dead).</p>
+            <p>2. Press <b>left button</b>/<b>right button</b> and move mouse to set cells alive/dead, respectively.</p>
+            <p>3. Press <b>space</b> to run the life.</p>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span>Rules &#9660;</span>
+          <div class="dropdown-content">
+            <p>1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.</p>
+            <p>2. Any live cell with two or three live neighbours lives on to the next generation.</p>
+            <p>3. Any live cell with more than three live neighbours dies, as if by overpopulation.</p>
+            <p>4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</p>
+          </div>
+        </div>
       </div>
     </div>
     <script src="./bootstrap.js"></script>

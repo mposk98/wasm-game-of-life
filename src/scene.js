@@ -7,7 +7,7 @@ export default {
     columns: 0,
     GRID_COLOR: 'rgb(8, 8, 15)',
     ALIVE_COLOR: 'rgb(200, 200, 220)',
-    DEAD_COLOR: 'rgb(40, 40, 50)',
+    DEAD_COLOR: 'rgb(40, 40, 52)',
     htmlContainerId: '',
 
     setHtmlSize(height, width) {
