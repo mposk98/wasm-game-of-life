@@ -16,7 +16,16 @@ const renderScene = () => {
     // console.log(universe.render_string());
     const cellsPtr = universe.cells();
     const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
-    scene.draw(cells, Cell.Dead);
+    scene.draw(cells);
+};
+
+let isRunning = false;
+
+const loop = () => {
+    if (!isRunning) return;
+    renderScene();
+    universe.tick();
+    requestAnimationFrame(loop);
 };
 
 const LEFT_BUTTON = 1;
@@ -39,6 +48,15 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
         universe.tick();
         requestAnimationFrame(renderScene);
+    }
+
+    if (event.keyCode === 82 && !isRunning) {
+        isRunning = true;
+        requestAnimationFrame(loop);
+    }
+
+    if (event.keyCode === 83 && isRunning) {
+        isRunning = false;
     }
 });
 

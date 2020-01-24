@@ -1,3 +1,5 @@
+import { Cell } from 'wasm-game-of-life-rust';
+
 export default {
     // private
 
@@ -38,23 +40,29 @@ export default {
         ctx.stroke();
     },
 
-    drawCells(ctx, cells, deadCellValue) {
+    drawCells(ctx, cells) {
         ctx.beginPath();
 
-        for (let row = 0; row < this.rows; row += 1) {
-            for (let col = 0; col < this.columns; col += 1) {
-                const idx = this.getIndex(row, col);
-
-                ctx.fillStyle = cells[idx] === deadCellValue ? this.DEAD_COLOR : this.ALIVE_COLOR;
-
-                ctx.fillRect(
-                    col * (this.cellSize + 1) + 1,
-                    row * (this.cellSize + 1) + 1,
-                    this.cellSize,
-                    this.cellSize,
-                );
+        const fillCells = (color, condition) => {
+            ctx.fillStyle = color;
+            for (let row = 0; row < this.rows; row += 1) {
+                for (let col = 0; col < this.columns; col += 1) {
+                    const idx = this.getIndex(row, col);
+                    if (cells[idx] !== condition) {
+                        continue;
+                    }
+                    ctx.fillRect(
+                        col * (this.cellSize + 1) + 1,
+                        row * (this.cellSize + 1) + 1,
+                        this.cellSize,
+                        this.cellSize,
+                    );
+                }
             }
         }
+
+        fillCells(this.ALIVE_COLOR, Cell.Alive);
+        fillCells(this.DEAD_COLOR, Cell.Dead);
 
         ctx.stroke();
     },
@@ -114,10 +122,10 @@ export default {
         );
     },
 
-    draw(cells, deadCellValue) {
+    draw(cells) {
         const ctx = this.htmlElem.getContext('2d');
         this.drawGrid(ctx);
-        this.drawCells(ctx, cells, deadCellValue);
+        this.drawCells(ctx, cells);
     },
 
     addClickListener(listener) {
