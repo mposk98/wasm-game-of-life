@@ -77,6 +77,7 @@ scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
 
 document.getElementById('universe-options').addEventListener('submit', (event) => {
     event.preventDefault();
+    isRunning = false;
     const size = event.target.elements['universe-size'].value;
     const mode = event.target.elements['universe-mode'].value;
     if (mode === 'periodic') {
