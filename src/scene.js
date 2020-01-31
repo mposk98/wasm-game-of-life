@@ -1,6 +1,6 @@
-import { Cell } from 'wasm-game-of-life-rust';
+import { bitIsSet } from './utils';
 
-export default {
+export const scene = {
     // private
 
     htmlElem: document.getElementById('game-of-life-canvas'),
@@ -48,21 +48,20 @@ export default {
             for (let row = 0; row < this.rows; row += 1) {
                 for (let col = 0; col < this.columns; col += 1) {
                     const idx = this.getIndex(row, col);
-                    if (cells[idx] !== condition) {
-                        continue;
+                    if (bitIsSet(idx, cells) === condition) {
+                        ctx.fillRect(
+                            col * (this.cellSize + 1) + 1,
+                            row * (this.cellSize + 1) + 1,
+                            this.cellSize,
+                            this.cellSize,
+                        );
                     }
-                    ctx.fillRect(
-                        col * (this.cellSize + 1) + 1,
-                        row * (this.cellSize + 1) + 1,
-                        this.cellSize,
-                        this.cellSize,
-                    );
                 }
             }
-        }
+        };
 
-        fillCells(this.ALIVE_COLOR, Cell.Alive);
-        fillCells(this.DEAD_COLOR, Cell.Dead);
+        fillCells(this.ALIVE_COLOR, true);
+        fillCells(this.DEAD_COLOR, false);
 
         ctx.stroke();
     },

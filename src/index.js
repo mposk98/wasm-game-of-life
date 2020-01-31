@@ -1,6 +1,6 @@
-import { Universe, Cell, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
+import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
 import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line import/no-unresolved
-import scene from './scene';
+import { scene } from './scene';
 
 let universeRows = 30;
 let universeColumns = 30;
@@ -15,7 +15,7 @@ scene.init(universeRows, universeColumns, 'scene-container');
 const renderScene = () => {
     // console.log(universe.render_string());
     const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
+    const cells = new Uint8Array(memory.buffer, cellsPtr, (universeRows * universeColumns) / 8);
     scene.draw(cells);
 };
 
