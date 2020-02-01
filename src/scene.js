@@ -11,14 +11,25 @@ export const scene = {
     ALIVE_COLOR: 'rgb(200, 200, 220)',
     DEAD_COLOR: 'rgb(40, 40, 52)',
     htmlContainerId: '',
+    indexes: [],
 
     setHtmlSize(height, width) {
         this.htmlElem.height = height;
         this.htmlElem.width = width;
     },
 
+    initIndexes() {
+        for (let i = 0; i < this.rows; i += 1) {
+            this.indexes[i] = [];
+            for (let j = 0; j < this.rows; j += 1) {
+                this.indexes[i][j] = i * this.rows + j;
+            }
+        }
+    },
+
     getIndex(i, j) {
-        return i * this.rows + j;
+        return this.indexes[i][j];
+        // return i * this.rows + j;
     },
 
     drawGrid(ctx) {
@@ -41,6 +52,7 @@ export const scene = {
     },
 
     drawCells(ctx, cells) {
+        const startTime = performance.now();
         ctx.beginPath();
 
         const fillCells = (color, condition) => {
@@ -64,6 +76,7 @@ export const scene = {
         fillCells(this.DEAD_COLOR, Cell.Dead);
 
         ctx.stroke();
+        console.log(`drawCells: ${performance.now() - startTime}ms`);
     },
 
     getEventCoords(event) {
@@ -101,6 +114,7 @@ export const scene = {
         this.columns = columns;
         this.htmlContainerId = htmlContainerId;
         this.setCellSize();
+        this.initIndexes();
         this.htmlElem.oncontextmenu = (event) => {
             event.preventDefault();
         };
@@ -110,6 +124,7 @@ export const scene = {
         this.rows = rows;
         this.columns = columns;
         this.setCellSize();
+        this.initIndexes();
     },
 
     setCellSize() {
