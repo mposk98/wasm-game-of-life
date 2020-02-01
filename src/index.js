@@ -15,7 +15,7 @@ scene.init(universeRows, universeColumns, 'scene-container');
 const renderScene = () => {
     // console.log(universe.render_string());
     const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, (universeRows * universeColumns) / 8);
+    const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
     scene.draw(cells);
 };
 

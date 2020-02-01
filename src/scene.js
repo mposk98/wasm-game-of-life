@@ -1,4 +1,4 @@
-import { bitIsSet } from './utils';
+import { Cell } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
 
 export const scene = {
     // private
@@ -48,7 +48,7 @@ export const scene = {
             for (let row = 0; row < this.rows; row += 1) {
                 for (let col = 0; col < this.columns; col += 1) {
                     const idx = this.getIndex(row, col);
-                    if (bitIsSet(idx, cells) === condition) {
+                    if (cells[idx] === condition) {
                         ctx.fillRect(
                             col * (this.cellSize + 1) + 1,
                             row * (this.cellSize + 1) + 1,
@@ -60,8 +60,8 @@ export const scene = {
             }
         };
 
-        fillCells(this.ALIVE_COLOR, true);
-        fillCells(this.DEAD_COLOR, false);
+        fillCells(this.ALIVE_COLOR, Cell.Alive);
+        fillCells(this.DEAD_COLOR, Cell.Dead);
 
         ctx.stroke();
     },
