@@ -1,6 +1,7 @@
 import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
-import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line import/no-unresolved
-import { scene } from './scene';
+// import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line
+// import { scene } from './scene';
+import './webgl';
 
 let universeRows = 30;
 let universeColumns = 30;
@@ -10,13 +11,13 @@ const universe = Universe.new(
     UniverseMode.FixedSizePeriodic,
 );
 
-scene.init(universeRows, universeColumns, 'scene-container');
+// scene.init(universeRows, universeColumns, 'scene-container');
 
 const renderScene = () => {
     // console.log(universe.render_string());
-    const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
-    scene.draw(cells);
+    // const cellsPtr = universe.cells();
+    // const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
+    // scene.draw(cells);
 };
 
 let isRunning = false;
@@ -28,11 +29,11 @@ const loop = () => {
     requestAnimationFrame(loop);
 };
 
-const LEFT_BUTTON = 1;
-const RIGHT_BUTTON = 3;
+// const LEFT_BUTTON = 1;
+// const RIGHT_BUTTON = 3;
 
 window.addEventListener('resize', () => {
-    scene.setCellSize();
+    // scene.setCellSize();
     requestAnimationFrame(renderScene);
 });
 
@@ -60,20 +61,20 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-scene.addClickListener((row, col) => {
-    universe.toggle_cell(row, col);
-    requestAnimationFrame(renderScene);
-});
+// scene.addClickListener((row, col) => {
+//     universe.toggle_cell(row, col);
+//     requestAnimationFrame(renderScene);
+// });
 
-scene.addMousePressedListener(LEFT_BUTTON, (row, col) => {
-    universe.set_alive(row, col);
-    requestAnimationFrame(renderScene);
-});
+// scene.addMousePressedListener(LEFT_BUTTON, (row, col) => {
+//     universe.set_alive(row, col);
+//     requestAnimationFrame(renderScene);
+// });
 
-scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
-    universe.set_dead(row, col);
-    requestAnimationFrame(renderScene);
-});
+// scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
+//     universe.set_dead(row, col);
+//     requestAnimationFrame(renderScene);
+// });
 
 document.getElementById('universe-options').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -89,8 +90,8 @@ document.getElementById('universe-options').addEventListener('submit', (event) =
     universeRows = size;
     universeColumns = size;
     universe.reinit_cells(size, size);
-    scene.reinit(size, size);
-    requestAnimationFrame(renderScene);
+    // scene.reinit(size, size);
+    // requestAnimationFrame(renderScene);
 });
 
 requestAnimationFrame(renderScene);
