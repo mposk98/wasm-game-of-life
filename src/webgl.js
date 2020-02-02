@@ -58,7 +58,7 @@ function setupWebGL() {
         -0.8, 0.8,
         0.5, 0.5,
         0.5, -0.5,
-        -0.5, 0.5,
+        -0.5, -0.5,
     ]);
 
     buffer = gl.createBuffer();
@@ -68,16 +68,11 @@ function setupWebGL() {
 
     const aVertexColor = gl.getAttribLocation(program, 'aVertexColor');
     gl.enableVertexAttribArray(aVertexColor);
-    const colors = [
-        1.0, 1.0, 1.0, 1.0, // white
-        1.0, 0.0, 0.0, 1.0, // red
-        0.0, 1.0, 0.0, 1.0, // green
-        0.0, 0.0, 1.0, 1.0, // blue
-    ];
+    const colors = [1, 0, 1, 0];
     colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gl.vertexAttribPointer(aVertexColor, 4, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(aVertexColor, 1, gl.FLOAT, false, 0, 0);
 
     gl.useProgram(program);
     gl.drawArrays(gl.POINTS, 0, 4);

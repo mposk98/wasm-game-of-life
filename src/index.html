@@ -183,12 +183,16 @@
     </div>
     <script id="vertex-shader" type="x-shader/x-vertex">
       attribute vec2 aVertexPosition;
-      attribute vec4 aVertexColor;
+      attribute float aVertexColor;
       varying lowp vec4 vColor;
       void main() {
         gl_Position = vec4(aVertexPosition, 0.0, 1.0);
         gl_PointSize = 20.0;
-        vColor = aVertexColor;
+        if(aVertexColor > 0.5) {
+          vColor = vec4(0.8, 0.8, 0.8, 1.0);
+        } else {
+          vColor = vec4(0.2, 0.2, 0.2, 1.0);
+        }
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
