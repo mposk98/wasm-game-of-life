@@ -157,7 +157,7 @@
         </form>
       </div>
       <div class="scene-container" id="scene-container">
-        <canvas id="game-of-life-canvas" width="600" height="600"></canvas>
+        <canvas id="game-of-life-canvas" width="200" height="200"></canvas>
       </div>
       <div class="right-container">
         <div class="dropdown margin-bottom-10">
@@ -183,23 +183,24 @@
     </div>
     <script id="vertex-shader" type="x-shader/x-vertex">
       attribute vec2 aVertexPosition;
-      attribute float aVertexColor;
-      varying lowp vec4 vColor;
+      // attribute float aVertexColor;
+      // varying lowp vec4 vColor;
       void main() {
         gl_Position = vec4(aVertexPosition, 0.0, 1.0);
-        gl_PointSize = 20.0;
-        if(aVertexColor > 0.5) {
-          vColor = vec4(0.8, 0.8, 0.8, 1.0);
-        } else {
-          vColor = vec4(0.2, 0.2, 0.2, 1.0);
-        }
+        gl_PointSize = 190.0;
+        // if(aVertexColor > 0.5) {
+        //   vColor = vec4(0.8, 0.8, 0.8, 1.0);
+        // } else {
+        //   vColor = vec4(0.2, 0.2, 0.4, 1.0);
+        // }
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
-      varying lowp vec4 vColor;
+      // varying lowp vec4 vColor;
 
       void main(void) {
-        gl_FragColor = vColor;
+        // gl_FragColor = vColor;
+        gl_FragColor = vec4(0.2, 0.2, 0.3, 1.0);
       }
     </script>
     <script src="./bootstrap.js"></script>

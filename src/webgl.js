@@ -1,3 +1,13 @@
+import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line
+import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
+
+const size = 1;
+const universe = Universe.new(
+    size,
+    size,
+    UniverseMode.FixedSizePeriodic,
+);
+
 let gl;
 let program;
 let buffer;
@@ -54,28 +64,30 @@ function setupWebGL() {
 
     gl.enableVertexAttribArray(aVertexPosition);
 
-    const vertexArray = new Float32Array([
-        -0.8, 0.8,
-        0.5, 0.5,
-        0.5, -0.5,
-        -0.5, -0.5,
-    ]);
+    // const vertexArray = new Float32Array([
+    //     -0.8, 0.8,
+    //     0.5, 0.5,
+    //     0.5, -0.5,
+    //     -0.5, -0.5,
+    // ]);
+
+    const vertexArray = new Float32Array(memory.buffer, universe.webgl_vertices(), 2 * size * size);
 
     buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
     gl.vertexAttribPointer(aVertexPosition, 2, gl.FLOAT, false, 0, 0);
 
-    const aVertexColor = gl.getAttribLocation(program, 'aVertexColor');
-    gl.enableVertexAttribArray(aVertexColor);
-    const colors = [1, 0, 1, 0];
-    colorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gl.vertexAttribPointer(aVertexColor, 1, gl.FLOAT, false, 0, 0);
+    // const aVertexColor = gl.getAttribLocation(program, 'aVertexColor');
+    // gl.enableVertexAttribArray(aVertexColor);
+    // const colors = [1, 0, 1, 0];
+    // colorBuffer = gl.createBuffer();
+    // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    // gl.vertexAttribPointer(aVertexColor, 1, gl.FLOAT, false, 0, 0);
 
     gl.useProgram(program);
-    gl.drawArrays(gl.POINTS, 0, 4);
+    gl.drawArrays(gl.POINTS, 0, size * size);
 
     cleanup();
 }
