@@ -1,10 +1,16 @@
 import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
 // import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line
-// import { scene } from './scene';
-import './webgl';
+import { init, draw } from './webgl';
 
-let universeRows = 30;
-let universeColumns = 30;
+const scene = {
+    init,
+    draw,
+};
+// import { scene } from './scene';
+const size = 20;
+let universeRows = size;
+let universeColumns = size;
+const cellsLen = universeRows * universeColumns;
 const universe = Universe.new(
     universeRows,
     universeColumns,
@@ -12,12 +18,14 @@ const universe = Universe.new(
 );
 
 // scene.init(universeRows, universeColumns, 'scene-container');
+scene.init(universe.webgl_vertices(), cellsLen);
+scene.draw(universe.webgl_cells(), cellsLen);
 
 const renderScene = () => {
     // console.log(universe.render_string());
     // const cellsPtr = universe.cells();
     // const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
-    // scene.draw(cells);
+    scene.draw(universe.webgl_cells(), cellsLen);
 };
 
 let isRunning = false;
