@@ -21,8 +21,8 @@ export const cleanup = () => {
 
 export const changeScaleFactor = (delta) => {
     scaleFactor = [
-        scaleFactor[0] + delta * scaleFactor[0],
-        scaleFactor[1] + delta * scaleFactor[1],
+        Math.max(scaleFactor[0] + delta * scaleFactor[0], 1.0),
+        Math.max(scaleFactor[1] + delta * scaleFactor[1], 1.0),
     ];
 };
 
