@@ -1,5 +1,8 @@
 import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
 import * as scene from './webgl';
+import * as controller from './controller';
+
+const canvas = document.getElementById('game-of-life-canvas');
 
 let size = document.getElementById('universe-options').elements['universe-size'].value;
 let universeRows = size;
@@ -10,11 +13,13 @@ const universe = Universe.new(
     UniverseMode.FixedSizePeriodic,
 );
 
-scene.init('game-of-life-canvas', universeRows, universeColumns);
-scene.attachVertices(universe.webgl_vertices());
+const CELL_SIZE_COEF = 0.8;
+
+scene.init(canvas, universeRows, universeColumns);
+scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
 
 const renderScene = () => {
-    scene.attachColors(universe.webgl_cells());
+    scene.attachColors(universe.webgl_colors());
     scene.draw();
     scene.cleanupColors();
 };
@@ -27,9 +32,6 @@ const loop = () => {
     universe.tick();
     requestAnimationFrame(loop);
 };
-
-// const LEFT_BUTTON = 1;
-// const RIGHT_BUTTON = 3;
 
 // window.addEventListener('resize', () => {
 //     // scene.setCellSize();
@@ -60,20 +62,28 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// scene.addClickListener((row, col) => {
-//     universe.toggle_cell(row, col);
-//     requestAnimationFrame(renderScene);
-// });
+const LEFT_BUTTON = 1;
+const RIGHT_BUTTON = 3;
 
-// scene.addMousePressedListener(LEFT_BUTTON, (row, col) => {
-//     universe.set_alive(row, col);
-//     requestAnimationFrame(renderScene);
-// });
+controller.init(canvas, universeColumns, universeRows);
 
-// scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
-//     universe.set_dead(row, col);
-//     requestAnimationFrame(renderScene);
-// });
+const addListeners = () => {
+    controller.addClickListener((row, col) => {
+        universe.toggle_cell(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    controller.addMousePressedListener(LEFT_BUTTON, (row, col) => {
+        universe.set_alive(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    controller.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
+        universe.set_dead(row, col);
+        requestAnimationFrame(renderScene);
+    });
+};
+addListeners();
 
 document.getElementById('universe-options').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -88,10 +98,13 @@ document.getElementById('universe-options').addEventListener('submit', (event) =
     }
     universeRows = size;
     universeColumns = size;
-    universe.reinit_cells(size, size);
+    universe.reinit_cells(universeRows, universeColumns);
     scene.cleanup();
-    scene.init('game-of-life-canvas', universeRows, universeColumns);
-    scene.attachVertices(universe.webgl_vertices());
+    scene.init(canvas, universeRows, universeColumns);
+    scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
+    controller.cleanupListeners();
+    controller.init(canvas, universeColumns, universeRows);
+    addListeners();
     requestAnimationFrame(renderScene);
 });
 

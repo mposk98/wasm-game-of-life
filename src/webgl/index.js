@@ -18,10 +18,7 @@ export const cleanup = () => {
     if (program) gl.deleteProgram(program);
 };
 
-const setRenderingContext = (canvasId) => {
-    const canvas = document.getElementById(canvasId);
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+const setRenderingContext = (canvas) => {
     gl = canvas.getContext('webgl', { antialias: true }) || canvas.getContext('experimental-webgl');
     if (!gl) {
         console.error('Failed to get WebGL context.Your browser or device may not support WebGL.');
@@ -55,8 +52,8 @@ const linkProgram = () => {
     }
 };
 
-export const init = (canvasId, width, height) => {
-    setRenderingContext(canvasId);
+export const init = (canvas, width, height) => {
+    setRenderingContext(canvas);
     if (gl === null) return;
     linkProgram();
     cellsLen = width * height;
