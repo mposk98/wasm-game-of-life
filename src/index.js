@@ -31,31 +31,31 @@ const loop = () => {
 // const LEFT_BUTTON = 1;
 // const RIGHT_BUTTON = 3;
 
-window.addEventListener('resize', () => {
-    // scene.setCellSize();
-    // requestAnimationFrame(renderScene);
-});
+// window.addEventListener('resize', () => {
+//     // scene.setCellSize();
+//     // requestAnimationFrame(renderScene);
+// });
 
 // prevent submit caused by space keyup
 document.addEventListener('keyup', (event) => {
-    if (event.keyCode === 32) {
+    if (event.code === 'Space') {
         event.preventDefault();
     }
 });
 
 document.addEventListener('keydown', (event) => {
-    if (event.keyCode === 32) {
+    if (event.code === 'Space') {
         event.preventDefault();
         universe.tick();
         requestAnimationFrame(renderScene);
     }
 
-    if (event.keyCode === 82 && !isRunning) {
+    if (event.code === 'KeyR' && !isRunning) {
         isRunning = true;
         requestAnimationFrame(loop);
     }
 
-    if (event.keyCode === 83 && isRunning) {
+    if (event.code === 'KeyS' && isRunning) {
         isRunning = false;
     }
 });
