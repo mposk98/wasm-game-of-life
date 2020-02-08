@@ -74,6 +74,7 @@ export const draw = (cellsPtr, cellsLen) => {
 
     gl.useProgram(program);
     gl.drawArrays(gl.TRIANGLES, 0, 6 * cellsLen);
+    gl.deleteBuffer(colorBuffer);
 };
 
 // window.addEventListener('load', setupWebGL, false);
