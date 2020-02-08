@@ -1,31 +1,22 @@
 import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
-// import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line
-import { init, draw } from './webgl';
+import * as scene from './webgl';
 
-const scene = {
-    init,
-    draw,
-};
-// import { scene } from './scene';
-const size = 20;
+let size = document.getElementById('universe-options').elements['universe-size'].value;
 let universeRows = size;
 let universeColumns = size;
-const cellsLen = universeRows * universeColumns;
 const universe = Universe.new(
     universeRows,
     universeColumns,
     UniverseMode.FixedSizePeriodic,
 );
 
-// scene.init(universeRows, universeColumns, 'scene-container');
-scene.init(universe.webgl_vertices(), cellsLen);
-scene.draw(universe.webgl_cells(), cellsLen);
+scene.init('game-of-life-canvas', universeRows, universeColumns);
+scene.attachVertices(universe.webgl_vertices());
 
 const renderScene = () => {
-    // console.log(universe.render_string());
-    // const cellsPtr = universe.cells();
-    // const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
-    scene.draw(universe.webgl_cells(), cellsLen);
+    scene.attachColors(universe.webgl_cells());
+    scene.draw();
+    scene.cleanupColors();
 };
 
 let isRunning = false;
@@ -42,7 +33,7 @@ const loop = () => {
 
 window.addEventListener('resize', () => {
     // scene.setCellSize();
-    requestAnimationFrame(renderScene);
+    // requestAnimationFrame(renderScene);
 });
 
 // prevent submit caused by space keyup
@@ -87,7 +78,7 @@ document.addEventListener('keydown', (event) => {
 document.getElementById('universe-options').addEventListener('submit', (event) => {
     event.preventDefault();
     isRunning = false;
-    const size = event.target.elements['universe-size'].value;
+    size = event.target.elements['universe-size'].value;
     const mode = event.target.elements['universe-mode'].value;
     if (mode === 'periodic') {
         universe.set_mode(UniverseMode.FixedSizePeriodic);
@@ -98,8 +89,10 @@ document.getElementById('universe-options').addEventListener('submit', (event) =
     universeRows = size;
     universeColumns = size;
     universe.reinit_cells(size, size);
-    // scene.reinit(size, size);
-    // requestAnimationFrame(renderScene);
+    scene.cleanup();
+    scene.init('game-of-life-canvas', universeRows, universeColumns);
+    scene.attachVertices(universe.webgl_vertices());
+    requestAnimationFrame(renderScene);
 });
 
 requestAnimationFrame(renderScene);

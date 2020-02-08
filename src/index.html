@@ -149,7 +149,7 @@
           </div>
           <div class="universe-options-field-container">
             <div class="universe-options-text">size:</div>
-            <input type="number" class="universe-options-option universe-size-input" value="30" min="1" max="400" name="universe-size"/>
+            <input type="number" class="universe-options-option universe-size-input" value="100" min="1" max="2000" name="universe-size"/>
           </div>
           <div class="universe-options-field-container">
             <button type="submit" class="universe-options-submit">submit</button>
@@ -181,26 +181,6 @@
         </div>
       </div>
     </div>
-    <script id="vertex-shader" type="x-shader/x-vertex">
-      attribute vec2 aVertexPosition;
-      attribute float aVertexColor;
-      varying lowp vec4 vColor;
-      void main() {
-        gl_Position = vec4(aVertexPosition, 0.0, 1.0);
-        // gl_PointSize = 10.0;
-        if(aVertexColor > 0.5) {
-          vColor = vec4(0.8, 0.8, 0.8, 1.0);
-        } else {
-          vColor = vec4(0.2, 0.2, 0.4, 1.0);
-        }
-      }
-    </script>
-    <script id="fragment-shader" type="x-shader/x-fragment">
-      varying lowp vec4 vColor;
-      void main(void) {
-        gl_FragColor = vColor;
-      }
-    </script>
     <script src="./bootstrap.js"></script>
   </body>
 </html>
