@@ -9,6 +9,7 @@ let mouseDownListeners = [];
 let mouseUpListeners = [];
 let mouseMoveListeners = [];
 let documentMouseUpListeners = [];
+let wheelListener = null;
 
 export const init = (canvas_, cols_, rows_) => {
     canvas = canvas_;
@@ -86,6 +87,11 @@ export const addClickListener = (listener) => {
     canvas.addEventListener('mouseup', handleMouseUp);
 };
 
+export const addWheelListener = (listener) => {
+    wheelListener = listener;
+    canvas.addEventListener('wheel', wheelListener);
+};
+
 export const cleanupListeners = () => {
     mouseDownListeners.forEach((listener) => {
         canvas.removeEventListener('mousedown', listener);
@@ -103,4 +109,5 @@ export const cleanupListeners = () => {
         document.removeEventListener('mouseup', listener);
     });
     documentMouseUpListeners = [];
+    canvas.removeEventListener('wheel', wheelListener);
 };

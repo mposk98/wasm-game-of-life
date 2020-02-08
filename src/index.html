@@ -38,6 +38,7 @@
       }
 
       .menu {
+        grid-area: options;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -84,6 +85,7 @@
       }
 
       .right-container {
+        grid-area: rules;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -116,21 +118,22 @@
         display: block;
       }
 
-      /* @media (min-width: 1200px) { */
-        .main {
-          display: grid;
-          grid-template-columns: 20vw 60vw 20vw;
-        }
+      .main {
+        display: grid;
+        grid-template-columns: 20vw 1fr 42vw 1fr 20vw;
+        grid-template-areas: "options . body . rules";
+      }
 
-        .scene-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: flex-start;
-          width: 100%;
-          height: 100%;
-        }
-      /* } */
+      .scene-container {
+        grid-area: body;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        height: 100%;
+      }
+
     </style>
   </head>
   <body>
@@ -149,7 +152,7 @@
           </div>
           <div class="universe-options-field-container">
             <div class="universe-options-text">size:</div>
-            <input type="number" class="universe-options-option universe-size-input" value="100" min="1" max="2000" name="universe-size"/>
+            <input type="number" class="universe-options-option universe-size-input" value="150" min="1" max="1200" name="universe-size"/>
           </div>
           <div class="universe-options-field-container">
             <button type="submit" class="universe-options-submit">submit</button>
@@ -157,7 +160,7 @@
         </form>
       </div>
       <div class="scene-container" id="scene-container">
-        <canvas id="game-of-life-canvas" width="600" height="600" oncontextmenu="return false;"></canvas>
+        <canvas id="game-of-life-canvas" oncontextmenu="return false"></canvas>
       </div>
       <div class="right-container">
         <div class="dropdown margin-bottom-10">

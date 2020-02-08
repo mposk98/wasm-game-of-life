@@ -4,6 +4,15 @@ import * as controller from './controller';
 
 const canvas = document.getElementById('game-of-life-canvas');
 
+const setCanvasSize = () => {
+    const { width, height } = document.getElementById('scene-container').getBoundingClientRect();
+    const size = Math.min(width, height);
+    canvas.width = size | 0;
+    canvas.height = size | 0;
+};
+
+setCanvasSize();
+
 let size = document.getElementById('universe-options').elements['universe-size'].value;
 let universeRows = size;
 let universeColumns = size;
@@ -13,7 +22,7 @@ const universe = Universe.new(
     UniverseMode.FixedSizePeriodic,
 );
 
-const CELL_SIZE_COEF = 0.8;
+const CELL_SIZE_COEF = 0.9;
 
 scene.init(canvas, universeRows, universeColumns);
 scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
@@ -33,10 +42,13 @@ const loop = () => {
     requestAnimationFrame(loop);
 };
 
-// window.addEventListener('resize', () => {
-//     // scene.setCellSize();
-//     // requestAnimationFrame(renderScene);
-// });
+window.addEventListener('resize', () => {
+    setCanvasSize();
+    scene.cleanup();
+    scene.init(canvas, universeRows, universeColumns);
+    scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
+    requestAnimationFrame(renderScene);
+});
 
 // prevent submit caused by space keyup
 document.addEventListener('keyup', (event) => {
@@ -80,6 +92,12 @@ const addListeners = () => {
 
     controller.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
         universe.set_dead(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    controller.addWheelListener((event) => {
+        event.preventDefault();
+        scene.changeScaleFactor(event.deltaY * -0.001);
         requestAnimationFrame(renderScene);
     });
 };
