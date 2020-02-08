@@ -1,22 +1,36 @@
 import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
-import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line import/no-unresolved
-import { scene } from './scene';
+import * as scene from './webgl';
+import * as controller from './controller';
 
-let universeRows = 30;
-let universeColumns = 30;
+const canvas = document.getElementById('game-of-life-canvas');
+
+const setCanvasSize = () => {
+    const { width, height } = document.getElementById('scene-container').getBoundingClientRect();
+    const size = Math.min(width, height);
+    canvas.width = size | 0;
+    canvas.height = size | 0;
+};
+
+setCanvasSize();
+
+let size = document.getElementById('universe-options').elements['universe-size'].value;
+let universeRows = size;
+let universeColumns = size;
 const universe = Universe.new(
     universeRows,
     universeColumns,
     UniverseMode.FixedSizePeriodic,
 );
 
-scene.init(universeRows, universeColumns, 'scene-container');
+const CELL_SIZE_COEF = 0.9;
+
+scene.init(canvas, universeRows, universeColumns);
+scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
 
 const renderScene = () => {
-    // console.log(universe.render_string());
-    const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, universeRows * universeColumns);
-    scene.draw(cells);
+    scene.attachColors(universe.webgl_colors());
+    scene.draw();
+    scene.cleanupColors();
 };
 
 let isRunning = false;
@@ -28,57 +42,71 @@ const loop = () => {
     requestAnimationFrame(loop);
 };
 
-const LEFT_BUTTON = 1;
-const RIGHT_BUTTON = 3;
-
 window.addEventListener('resize', () => {
-    scene.setCellSize();
+    setCanvasSize();
+    scene.cleanup();
+    scene.init(canvas, universeRows, universeColumns);
+    scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
     requestAnimationFrame(renderScene);
 });
 
 // prevent submit caused by space keyup
 document.addEventListener('keyup', (event) => {
-    if (event.keyCode === 32) {
+    if (event.code === 'Space') {
         event.preventDefault();
     }
 });
 
 document.addEventListener('keydown', (event) => {
-    if (event.keyCode === 32) {
+    if (event.code === 'Space') {
         event.preventDefault();
         universe.tick();
         requestAnimationFrame(renderScene);
     }
 
-    if (event.keyCode === 82 && !isRunning) {
+    if (event.code === 'KeyR' && !isRunning) {
         isRunning = true;
         requestAnimationFrame(loop);
     }
 
-    if (event.keyCode === 83 && isRunning) {
+    if (event.code === 'KeyS' && isRunning) {
         isRunning = false;
     }
 });
 
-scene.addClickListener((row, col) => {
-    universe.toggle_cell(row, col);
-    requestAnimationFrame(renderScene);
-});
+const LEFT_BUTTON = 1;
+const RIGHT_BUTTON = 3;
 
-scene.addMousePressedListener(LEFT_BUTTON, (row, col) => {
-    universe.set_alive(row, col);
-    requestAnimationFrame(renderScene);
-});
+controller.init(canvas, universeColumns, universeRows);
 
-scene.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
-    universe.set_dead(row, col);
-    requestAnimationFrame(renderScene);
-});
+const addListeners = () => {
+    controller.addClickListener((row, col) => {
+        universe.toggle_cell(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    controller.addMousePressedListener(LEFT_BUTTON, (row, col) => {
+        universe.set_alive(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    controller.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
+        universe.set_dead(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    controller.addWheelListener((event) => {
+        event.preventDefault();
+        scene.changeScaleFactor(event.deltaY * -0.001);
+        requestAnimationFrame(renderScene);
+    });
+};
+addListeners();
 
 document.getElementById('universe-options').addEventListener('submit', (event) => {
     event.preventDefault();
     isRunning = false;
-    const size = event.target.elements['universe-size'].value;
+    size = event.target.elements['universe-size'].value;
     const mode = event.target.elements['universe-mode'].value;
     if (mode === 'periodic') {
         universe.set_mode(UniverseMode.FixedSizePeriodic);
@@ -88,8 +116,13 @@ document.getElementById('universe-options').addEventListener('submit', (event) =
     }
     universeRows = size;
     universeColumns = size;
-    universe.reinit_cells(size, size);
-    scene.reinit(size, size);
+    universe.reinit_cells(universeRows, universeColumns);
+    scene.cleanup();
+    scene.init(canvas, universeRows, universeColumns);
+    scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
+    controller.cleanupListeners();
+    controller.init(canvas, universeColumns, universeRows);
+    addListeners();
     requestAnimationFrame(renderScene);
 });
 
