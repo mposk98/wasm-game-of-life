@@ -1,6 +1,7 @@
 import { memory } from 'wasm-game-of-life-rust/wasm_game_of_life_bg'; // eslint-disable-line
 import { vsSource } from './vertex-shader';
 import { fsSource } from './fragment-shader';
+import { camera } from '../camera';
 
 let gl;
 let program;
@@ -10,20 +11,12 @@ let cellsLen;
 let vertexArrayLen;
 let colorsArrayLen;
 let verticesLen;
-let scaleFactor = [1.0, 1.0];
 
 export const cleanup = () => {
     gl.useProgram(null);
     if (verticesBuffer) gl.deleteBuffer(verticesBuffer);
     if (colorsBuffer) gl.deleteBuffer(colorsBuffer);
     if (program) gl.deleteProgram(program);
-};
-
-export const changeScaleFactor = (delta) => {
-    scaleFactor = [
-        Math.max(scaleFactor[0] + delta * scaleFactor[0], 1.0),
-        Math.max(scaleFactor[1] + delta * scaleFactor[1], 1.0),
-    ];
 };
 
 const setRenderingContext = (canvas) => {
@@ -101,6 +94,6 @@ export const attachColors = (colorsPtr) => {
 export const draw = () => {
     gl.useProgram(program);
     const uScaleFactor = gl.getUniformLocation(program, 'uScaleFactor');
-    gl.uniform2fv(uScaleFactor, scaleFactor);
+    gl.uniform2fv(uScaleFactor, [camera.scaleFactor, camera.scaleFactor]);
     gl.drawArrays(gl.TRIANGLES, 0, verticesLen);
 };

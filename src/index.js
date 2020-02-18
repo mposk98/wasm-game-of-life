@@ -1,6 +1,5 @@
 import { Universe, UniverseMode } from 'wasm-game-of-life-rust'; // eslint-disable-line import/no-unresolved
-import * as scene from './webgl';
-import * as controller from './controller';
+import { life } from './life';
 
 const canvas = document.getElementById('game-of-life-canvas');
 
@@ -24,13 +23,13 @@ const universe = Universe.new(
 
 const CELL_SIZE_COEF = 0.9;
 
-scene.init(canvas, universeRows, universeColumns);
-scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
+life.scene.init(canvas, universeRows, universeColumns);
+life.scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
 
 const renderScene = () => {
-    scene.attachColors(universe.webgl_colors());
-    scene.draw();
-    scene.cleanupColors();
+    life.scene.attachColors(universe.webgl_colors());
+    life.scene.draw();
+    life.scene.cleanupColors();
 };
 
 let isRunning = false;
@@ -44,9 +43,9 @@ const loop = () => {
 
 window.addEventListener('resize', () => {
     setCanvasSize();
-    scene.cleanup();
-    scene.init(canvas, universeRows, universeColumns);
-    scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
+    life.scene.cleanup();
+    life.scene.init(canvas, universeRows, universeColumns);
+    life.scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
     requestAnimationFrame(renderScene);
 });
 
@@ -77,27 +76,27 @@ document.addEventListener('keydown', (event) => {
 const LEFT_BUTTON = 1;
 const RIGHT_BUTTON = 3;
 
-controller.init(canvas, universeColumns, universeRows);
+life.controller.init(canvas, universeColumns, universeRows);
 
 const addListeners = () => {
-    controller.addClickListener((row, col) => {
+    life.controller.addClickListener((row, col) => {
         universe.toggle_cell(row, col);
         requestAnimationFrame(renderScene);
     });
 
-    controller.addMousePressedListener(LEFT_BUTTON, (row, col) => {
+    life.controller.addMousePressedListener(LEFT_BUTTON, (row, col) => {
         universe.set_alive(row, col);
         requestAnimationFrame(renderScene);
     });
 
-    controller.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
+    life.controller.addMousePressedListener(RIGHT_BUTTON, (row, col) => {
         universe.set_dead(row, col);
         requestAnimationFrame(renderScene);
     });
 
-    controller.addWheelListener((event) => {
+    life.controller.addWheelListener((event) => {
         event.preventDefault();
-        scene.changeScaleFactor(event.deltaY * -0.001);
+        life.camera.changeScaleFactor(event.deltaY * -0.001);
         requestAnimationFrame(renderScene);
     });
 };
@@ -117,11 +116,11 @@ document.getElementById('universe-options').addEventListener('submit', (event) =
     universeRows = size;
     universeColumns = size;
     universe.reinit_cells(universeRows, universeColumns);
-    scene.cleanup();
-    scene.init(canvas, universeRows, universeColumns);
-    scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
-    controller.cleanupListeners();
-    controller.init(canvas, universeColumns, universeRows);
+    life.scene.cleanup();
+    life.scene.init(canvas, universeRows, universeColumns);
+    life.scene.attachVertices(universe.webgl_vertices(CELL_SIZE_COEF));
+    life.controller.cleanupListeners();
+    life.controller.init(canvas, universeColumns, universeRows);
     addListeners();
     requestAnimationFrame(renderScene);
 });

@@ -1,3 +1,5 @@
+import { camera } from '../camera';
+
 let rows;
 let cols;
 let colSize;
@@ -23,11 +25,17 @@ export const init = (canvas_, cols_, rows_) => {
 };
 
 export const getEventCoords = (event) => {
+    const cameraX = camera.X + canvas.width / 2;
+    const cameraY = camera.Y + canvas.height / 2;
+
     const relX = event.clientX - canvasLeft;
     const relY = event.clientY - canvasTop;
 
-    const col = Math.min((relX / colSize) | 0, cols - 1);
-    const row = Math.min((relY / rowSize) | 0, rows - 1);
+    const sceneX = (relX - cameraX) / camera.scaleFactor + cameraX;
+    const sceneY = (relY - cameraY) / camera.scaleFactor + cameraY;
+
+    const col = Math.min((sceneX / colSize) | 0, cols - 1);
+    const row = Math.min((sceneY / rowSize) | 0, rows - 1);
 
     return { col, row };
 };
