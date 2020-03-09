@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The game of life</title>
+    <style>
+      body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: rgb(8, 8, 15);
+        color: #DDDDDD;
+        display: grid;
+        grid-template-rows: 1fr 14fr 10px;
+      }
+
+      button {
+        color: #DDDDDD;
+        background-color: rgb(40, 40, 52);
+        border-radius: 3px;
+        border: none;
+      }
+
+      button:hover {
+        background-color: rgb(43, 43, 66);
+      }
+
+      .header {
+        text-align: center;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .menu {
+        grid-area: options;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .universe-options-text {
+        width: 34%;
+      }
+
+      .universe-options-option {
+        width: 66%;
+        height: 100%;
+        border: none;
+        border-radius: 3px;
+        padding: 0;
+      }
+
+      .universe-options-option:hover {
+        opacity: 0.9;
+      }
+
+      .universe-size-input {
+        padding-left: 3%;
+        width: 63%;
+        height: 100%;
+      }
+
+      .universe-options-field-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 180px;
+        height: 30px;
+      }
+
+      .universe-options-field-container:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      .universe-options-submit {
+        width: 100%;
+        height: 100%;
+      }
+
+      .right-container {
+        grid-area: rules;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .margin-bottom-10 {
+        margin-bottom: 10px;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        cursor: default;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: rgb(16, 16, 30);;
+        min-width: 300px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding-left: 16px;
+        padding-right: 16px;
+        z-index: 1;
+        right: 100%;
+        text-align: justify;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .main {
+        display: grid;
+        grid-template-columns: 20vw 1fr 42vw 1fr 20vw;
+        grid-template-areas: "options . body . rules";
+      }
+
+      .scene-container {
+        grid-area: body;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        height: 100%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <strong>The game of life</strong>
+    </div>
+    <div class="main" id="main">
+      <div class="menu">
+        <form class="universe-options" id="universe-options">
+          <div class="universe-options-field-container">
+            <div class="universe-options-text">mode:</div>
+            <select class="universe-options-option" name="universe-mode">
+              <option value="periodic">periodic</option>
+              <option value="non-periodic">non periodic</option>
+            </select>
+          </div>
+          <div class="universe-options-field-container">
+            <div class="universe-options-text">size:</div>
+            <input type="number" class="universe-options-option universe-size-input" value="150" min="1" max="1200" name="universe-size"/>
+          </div>
+          <div class="universe-options-field-container">
+            <button type="submit" class="universe-options-submit">submit</button>
+          </div>
+        </form>
+      </div>
+      <div class="scene-container" id="scene-container">
+        <canvas id="game-of-life-canvas" oncontextmenu="return false"></canvas>
+      </div>
+      <div class="right-container">
+        <div class="dropdown margin-bottom-10">
+          <span>Game control &#9660;</span>
+          <div class="dropdown-content">
+            <p>1. Click <b>left button</b>/<b>right button</b> to set cells alive/dead, respectively.</p>
+            <p>2. Press <b>left button</b>/<b>right button</b> and move mouse to set cells alive/dead, respectively.</p>
+            <p>3. Press <b>r</b> to run the life.</p>
+            <p>4. Press <b>s</b> to stop the life.</p>
+            <p>5. Press <b>space</b> to set next step of the life.</p>
+            <p>6. Spin the mouse wheel for zoom.</p>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span>Rules &#9660;</span>
+          <div class="dropdown-content">
+            <p>1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.</p>
+            <p>2. Any live cell with two or three live neighbours lives on to the next generation.</p>
+            <p>3. Any live cell with more than three live neighbours dies, as if by overpopulation.</p>
+            <p>4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./bootstrap.js"></script>
+  </body>
+</html>
