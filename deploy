@@ -13,5 +13,5 @@ git init
 git add -A
 git checkout -b gh-pages
 git commit -m 'deploy to github pages'
-git push --force https://github.com/mposk98/wasm-game-of-life.git gh-pages
+git push --force git@github.com:mposk98/wasm-game-of-life.git gh-pages
 cd ..
