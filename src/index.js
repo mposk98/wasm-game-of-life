@@ -79,8 +79,13 @@ const RIGHT_BUTTON = 3;
 life.controller.init(canvas, universeColumns, universeRows);
 
 const addListeners = () => {
-    life.controller.addClickListener((row, col) => {
-        universe.toggle_cell(row, col);
+    life.controller.addClickListener(LEFT_BUTTON, (row, col) => {
+        universe.set_alive(row, col);
+        requestAnimationFrame(renderScene);
+    });
+
+    life.controller.addClickListener(RIGHT_BUTTON, (row, col) => {
+        universe.set_dead(row, col);
         requestAnimationFrame(renderScene);
     });
 

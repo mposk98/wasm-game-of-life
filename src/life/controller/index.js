@@ -70,12 +70,12 @@ export const addMousePressedListener = (btnNum, listener) => {
     canvas.addEventListener('mousemove', handleMouseMove);
 };
 
-export const addClickListener = (listener) => {
+export const addClickListener = (button, listener) => {
     let row;
     let col;
     const handleMouseDown = (event) => {
         event.preventDefault();
-        if (event.which !== 1) return;
+        if (event.which !== button) return;
         const downCoords = getEventCoords(event);
         row = downCoords.row;
         col = downCoords.col;
@@ -85,7 +85,7 @@ export const addClickListener = (listener) => {
 
     const handleMouseUp = (event) => {
         event.preventDefault();
-        if (event.which !== 1) return;
+        if (event.which !== button) return;
         const upCoords = getEventCoords(event);
         if (upCoords.row === row && upCoords.col === col) {
             listener(row, col);
